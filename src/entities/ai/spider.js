@@ -59,7 +59,7 @@ export class Spider extends Entity {
     for(let i=0;i<segs;i++) {
       const a = (i/segs)*Math.PI*2;
       const points = [];
-      for(let d=0. d<=r; d+=0.8) {
+      for(let d=0; d<=r; d+=0.8) {
         points.push(new THREE.Vector3(
           this.homeX + Math.cos(a)*d,
           centerY + Math.sin(d*2)*0.15,
