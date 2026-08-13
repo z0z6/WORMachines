@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Micro World — Survival</title>
+<link rel="stylesheet" href="style.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+
+<!-- EKRAN WYBORU POSTACI -->
+<div id="char-select">
+  <h1>🌿 Micro World</h1>
+  <p class="subtitle">Przetrwaj od wiosny do późnej jesieni</p>
+  <div class="chars">
+    <div class="char-card" data-char="beetle">
+      <div class="char-preview beetle-prev"></div>
+      <h3>Chrząszcz</h3>
+      <p>Wytrzymały pancernik. Wolniejszy, ale odporny na obrażenia.</p>
+      <span class="stat">❤️ Wytrzymałość</span>
+    </div>
+    <div class="char-card" data-char="ladybug">
+      <div class="char-preview ladybug-prev"></div>
+      <h3>Biedronka</h3>
+      <p>Szybka i zwinna. Idealna do ucieczek przed drapieżnikami.</p>
+      <span class="stat">⚡ Szybkość</span>
+    </div>
+    <div class="char-card" data-char="grasshopper">
+      <div class="char-preview grasshopper-prev"></div>
+      <h3>Pasikonik</h3>
+      <p>Skacze wysoko i daleko. Doskonały do eksploracji.</p>
+      <span class="stat">🦘 Skok</span>
+    </div>
+  </div>
+</div>
+
+<!-- HUD -->
+<div id="hud" class="hidden">
+  <div id="hud-top">
+    <div class="hud-panel">
+      <span class="hud-label">❤️ Życie</span>
+      <div class="bar"><div id="hp-bar" style="width:100%"></div></div>
+    </div>
+    <div class="hud-panel">
+      <span class="hud-label">🍃 Głód</span>
+      <div class="bar"><div id="hunger-bar" style="width:100%"></div></div>
+    </div>
+    <div class="hud-panel">
+      <span class="hud-label">🌡️ Temp</span>
+      <span id="temp-val">20°C</span>
+    </div>
+  </div>
+
+  <div id="hud-center">
+    <div id="season-badge">🌸 Wiosna</div>
+    <div id="time-badge">☀️ Dzień</div>
+  </div>
+
+  <div id="hud-bottom">
+    <div class="hud-hint">
+      <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> — ruch
+      <kbd>SPACJA</kbd> — skok
+      <kbd>SHIFT</kbd> — sprint &nbsp;|&nbsp; <kbd>E</kbd> — kryjówka
+      <span style="margin-left:12px">🖱️ mysz — kamera</span>
+    </div>
+    <div id="msg-area"></div>
+  </div>
+</div>
+
+<!-- GAME OVER -->
+<div id="game-over" class="hidden">
+  <div class="go-panel">
+    <h2 id="go-title">Koniec gry</h2>
+    <p id="go-reason">Nie udało się przetrwać...</p>
+    <button id="go-restart">🔄 Zagraj ponownie</button>
+  </div>
+</div>
+
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
