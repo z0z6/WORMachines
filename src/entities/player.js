@@ -164,22 +164,23 @@ export function updatePlayer(dt, camera, slowMult = 1) {
   const cfg = CFG[playerType];
   const p = playerGroup.position;
 
-  // Mouse look (camera orbit)
+  // Mouse look (camera orbit) — camYaw jest teraz JEDYNYM źródłem kierunku kamery
   camYaw -= mouse.dx * 0.002;
   camPitch = Math.max(0.1, Math.min(1.2, camPitch + mouse.dy*0.002));
 
-  // Movement relative to camera — W/↑ do przodu, Z/↓ do tyłu, A/← w lewo, S/→ w prawo
+  // Kierunek liczony z camYaw, NIE z camera.getWorldDirection() —
+  // odczytywanie kierunku z samej kamery tworzyło pętlę sprzężenia zwrotnego z kodem
+  // kamery poniżej (który wcześniej bazował na obrocie postaci) i powodowało kręcenie się.
+  const camDir = new THREE.Vector3(Math.sin(camYaw), 0, Math.cos(camYaw));
+  const camRight = new THREE.Vector3().crossVectors(camDir, new THREE.Vector3(0,1,0)).normalize();
+
+  // W/↑ do przodu, Z/↓ do tyłu, A/← w lewo, S/→ w prawo
   const forward = Number(keys.w || keys.arrowup) - Number(keys.z || keys.arrowdown);
   const right   = Number(keys.s || keys.arrowright) - Number(keys.a || keys.arrowleft);
 
   if(forward !== 0 || right !== 0) {
-    const camDir = new THREE.Vector3();
-    camera.getWorldDirection(camDir);
-    camDir.y = 0; camDir.normalize();
-    const camRight = new THREE.Vector3().crossVectors(camDir, new THREE.Vector3(0,1,0)).normalize();
-
     const move = new THREE.Vector3()
-      .addScaledVector(camDir, -forward)
+      .addScaledVector(camDir, forward)
       .addScaledVector(camRight, right)
       .normalize();
 
@@ -243,11 +244,11 @@ export function updatePlayer(dt, camera, slowMult = 1) {
     }
   });
 
-  // Camera follow
+  // Camera follow — teraz oparta na camYaw (mysz), NIE na obrocie postaci
   const dist = keys.shift ? 7 : 5.5;
   const height = keys.shift ? 4 : 3;
-  const cx = p.x - Math.sin(playerGroup.rotation.y)*dist;
-  const cz = p.z - Math.cos(playerGroup.rotation.y)*dist;
+  const cx = p.x - Math.sin(camYaw)*dist;
+  const cz = p.z - Math.cos(camYaw)*dist;
   camera.position.lerp(new THREE.Vector3(cx, p.y+height, cz), dt*4);
   camera.lookAt(p.x, p.y+0.5, p.z);
 }
