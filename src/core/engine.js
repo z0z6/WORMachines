@@ -16,7 +16,7 @@ export function initEngine() {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.1;
+  renderer.toneMappingExposure = 0.9;
   document.body.appendChild(renderer.domElement);
 
   clock = new THREE.Clock();
