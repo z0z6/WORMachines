@@ -18,13 +18,9 @@ function createBiomeMaterial(folder, prefix) {
     roughnessMap:      loadTexture(`${base}_Roughness.jpg`),
     aoMap:             loadTexture(`${base}_AmbientOcclusion.jpg`),
 
-    // Displacement WYŁĄCZONY — przy chunkowanym terenie powoduje szczeliny
-    // na granicach chunków, bo każdy chunk próbkuje displacement mapę
-    // w innym miejscu i brzegi się "rozjeżdżają".
-    // Normal mapa daje TEN SAM efekt wizualny (fałszywa głębia światła)
-    // bez deformowania geometrii.
-    displacementScale: 0,
-
+    // Displacement CAŁKOWICIE USUNIĘTY — przy chunkowanym terenie
+    // powoduje nieodwracalne szczeliny na granicach chunków.
+    // Normal mapa daje wystarczający efekt głębi bez deformowania geometrii.
     roughness: 1.0,
     metalness: 0.0,
   });
