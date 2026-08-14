@@ -24,11 +24,18 @@ export function updateChunks(px, pz) {
     if(!needed.has(key)) {
       scene.remove(obj.terrain);
       scene.remove(obj.veg);
+
+      // Geometria terenu jest unikalna dla chunku — bezpiecznie ją zwolnić
       obj.terrain.geometry.dispose();
-      obj.terrain.material.dispose();
+      // NIE zwalniamy obj.terrain.material — to współdzielony obiekt z biomeMaterials,
+      // używany też przez inne, wciąż aktywne chunki tego samego biomu!
+
       // veg is a group with instanced meshes
       obj.veg.traverse(c => {
-        if(c.isInstancedMesh) { c.geometry.dispose(); c.material.dispose(); }
+        if(c.isInstancedMesh) {
+          // grassGeo/bushGeo/mossGeo to współdzielone singletony (vegetation.js) — nie zwalniamy geometrii
+          c.material.dispose(); // materiał roślinności JEST unikalny na chunk — to bezpieczne
+        }
       });
       activeChunks.delete(key);
     }
