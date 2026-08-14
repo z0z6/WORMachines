@@ -66,21 +66,23 @@ function animate() {
 
   // Hideout proximity check
   nearestHideout = getNearestHideout(playerPos.x, playerPos.z);
-  updatePlayer(dt, camera);
 
-  // Apply slow from web
+  // Apply slow from web and pass to player
+  let slowMult = 1;
   if(slowTimer > 0) {
     slowTimer -= dt;
-    // Slow is applied by reducing effective speed in player.js via a global or we can just show message
+    slowMult = 0.5;
   }
+  updatePlayer(dt, camera, slowMult);
 
-  // Handle hideout key
-  if(keys.e && nearestHideout && !isHidden) {
-    keys.e = false; // consume
-    // Teleport slightly into hideout
-    playerGroup.position.x = nearestHideout.x;
-    playerGroup.position.z = nearestHideout.z;
-    showMessage('Schowałeś się! Jesteś bezpieczny.', 2000);
+  // Handle hideout key — consume E always to prevent spam when exiting shelter
+  if(keys.e) {
+    keys.e = false;
+    if(nearestHideout && !isHidden) {
+      playerGroup.position.x = nearestHideout.x;
+      playerGroup.position.z = nearestHideout.z;
+      showMessage('Schowałeś się! Jesteś bezpieczny.', 2000);
+    }
   }
 
   const result = updateSpawner(dt, playerPos, timeInfo, scene);
@@ -134,7 +136,8 @@ function animate() {
     return;
   }
 
-  updateHUD(timeInfo, isHidden, nearestHideout);
+  // FIX: pass slowTimer as 3rd argument so web-slow indicator works
+  updateHUD(timeInfo, isHidden, slowTimer);
   renderer.render(scene, camera);
 }
 
