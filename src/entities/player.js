@@ -168,9 +168,9 @@ export function updatePlayer(dt, camera, slowMult = 1) {
   camYaw -= mouse.dx * 0.002;
   camPitch = Math.max(0.1, Math.min(1.2, camPitch + mouse.dy*0.002));
 
-  // Movement relative to camera — W/↑ do przodu, Z/↓ do tyłu, A/← w lewo, D/→ w prawo
+  // Movement relative to camera — W/↑ do przodu, Z/↓ do tyłu, A/← w lewo, S/→ w prawo
   const forward = Number(keys.w || keys.arrowup) - Number(keys.z || keys.arrowdown);
-  const right   = Number(keys.d || keys.arrowright) - Number(keys.a || keys.arrowleft);
+  const right   = Number(keys.s || keys.arrowright) - Number(keys.a || keys.arrowleft);
 
   if(forward !== 0 || right !== 0) {
     const camDir = new THREE.Vector3();
