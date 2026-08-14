@@ -21,18 +21,12 @@ export function terrainHeight(x, z) {
 export function createChunkMesh(cx, cz) {
   const biomeKey = biomeAt(cx, cz);
   const size = 32;
-  // Wracamy do 24 segmentów — displacement jest wyłączony,
-  // więc nie potrzebujemy 64. Mniej wierzchołków = lepsza wydajność.
   const seg = 24;
   const geo = new THREE.PlaneGeometry(size, size, seg, seg);
   geo.rotateX(-Math.PI/2);
 
   const pos = geo.attributes.position;
   const uvAttr = geo.attributes.uv;
-
-  // Zmniejszony uvScale = tekstura powtarza się rzadziej,
-  // więc detale (kamienie, kępy trawy) wyglądają na WIĘKSZE w świecie gry.
-  // Dla zoptymalizowanych (mniejszych) tekstur to kluczowe.
   const uvScale = 0.025;
 
   for(let i = 0; i < pos.count; i++) {
@@ -45,7 +39,6 @@ export function createChunkMesh(cx, cz) {
 
   geo.computeVertexNormals();
 
-  // AO map wymaga uv2
   if (!geo.attributes.uv2) {
     geo.setAttribute('uv2', geo.attributes.uv.clone());
   }
@@ -54,5 +47,10 @@ export function createChunkMesh(cx, cz) {
   const mesh = new THREE.Mesh(geo, mat);
   mesh.receiveShadow = true;
   mesh.castShadow = true;
+
+  // DIAGNOSTYKA: dodajemy nazwę żeby łatwo znaleźć w konsoli
+  mesh.name = `chunk_${cx}_${cz}_${biomeKey}`;
+  console.log('[Terrain] Chunk created:', mesh.name, 'material.map:', mat.map ? 'loaded' : 'null');
+
   return mesh;
 }
