@@ -6,7 +6,7 @@ function loadTexture(path, colorSpace = THREE.LinearSRGBColorSpace) {
   const tex = loader.load(path);
   tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
   tex.colorSpace = colorSpace;
-  tex.anisotropy = 16; // ostra tekstura pod kątem
+  tex.anisotropy = 16;
   return tex;
 }
 
@@ -16,12 +16,16 @@ function createBiomeMaterial(folder, prefix) {
     map:               loadTexture(`${base}_Color.jpg`, THREE.SRGBColorSpace),
     normalMap:         loadTexture(`${base}_NormalGL.jpg`),
     roughnessMap:      loadTexture(`${base}_Roughness.jpg`),
-    displacementMap:   loadTexture(`${base}_Displacement.jpg`),
     aoMap:             loadTexture(`${base}_AmbientOcclusion.jpg`),
-    
-    displacementScale: 0.15,   // wysokość mikro-wypukłości (15 cm)
-    displacementBias:  -0.05,
-    roughness: 1.0,            // mapa roughness przejmuje kontrolę
+
+    // Displacement WYŁĄCZONY — przy chunkowanym terenie powoduje szczeliny
+    // na granicach chunków, bo każdy chunk próbkuje displacement mapę
+    // w innym miejscu i brzegi się "rozjeżdżają".
+    // Normal mapa daje TEN SAM efekt wizualny (fałszywa głębia światła)
+    // bez deformowania geometrii.
+    displacementScale: 0,
+
+    roughness: 1.0,
     metalness: 0.0,
   });
 }
