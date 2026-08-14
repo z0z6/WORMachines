@@ -168,9 +168,9 @@ export function updatePlayer(dt, camera, slowMult = 1) {
   camYaw -= mouse.dx * 0.002;
   camPitch = Math.max(0.1, Math.min(1.2, camPitch + mouse.dy*0.002));
 
-  // Movement relative to camera
-  const forward = Number(keys.w) - Number(keys.s);
-  const right = Number(keys.d) - Number(keys.a);
+  // Movement relative to camera — W/↑ do przodu, Z/↓ do tyłu, A/← w lewo, D/→ w prawo
+  const forward = Number(keys.w || keys.arrowup) - Number(keys.z || keys.arrowdown);
+  const right   = Number(keys.d || keys.arrowright) - Number(keys.a || keys.arrowleft);
 
   if(forward !== 0 || right !== 0) {
     const camDir = new THREE.Vector3();
@@ -183,7 +183,7 @@ export function updatePlayer(dt, camera, slowMult = 1) {
       .addScaledVector(camRight, right)
       .normalize();
 
-    const speed = keys.shift ? cfg.speed * 1.6 : cfg.speed;
+    const speed = (keys.shift ? cfg.speed * 1.6 : cfg.speed) * slowMult;
     velocity.x = move.x * speed;
     velocity.z = move.z * speed;
 
