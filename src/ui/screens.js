@@ -34,8 +34,8 @@ export function updateHUD(timeInfo, inShelter = false, webSlow = 0) {
 
   // Status indicators
   let statusHTML = '';
-  if(inShelter) statusHTML += '<span class="status-tag safe">🏠 W kryjówce</span>';
-  if(webSlow > 0) statusHTML += '<span class="status-tag danger">🕸️ Pajęczyna!</span>';
+  if(inShelter) statusHTML += '🏠 W kryjówce';
+  if(webSlow > 0) statusHTML += '🕸️ Pajęczyna!';
   const statusEl = document.getElementById('status-area');
   if(statusEl) statusEl.innerHTML = statusHTML;
 }
