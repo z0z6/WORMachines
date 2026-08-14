@@ -1,4 +1,4 @@
-export const keys = { w:false, a:false, z:false, d:false, space:false, shift:false, e:false, arrowup:false, arrowdown:false, arrowleft:false, arrowright:false };
+export const keys = { w:false, a:false, z:false, d:false, s:false, space:false, shift:false, e:false, arrowup:false, arrowdown:false, arrowleft:false, arrowright:false };
 export let mouse = { dx:0, dy:0 };
 
 export function initInput() {
