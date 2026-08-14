@@ -1,12 +1,16 @@
-export const keys = { w:false, a:false, s:false, d:false, space:false, shift:false, e:false };
+export const keys = { w:false, a:false, z:false, d:false, space:false, shift:false, e:false, arrowup:false, arrowdown:false, arrowleft:false, arrowright:false };
 export let mouse = { dx:0, dy:0 };
 
 export function initInput() {
   document.addEventListener('keydown', e => {
     const k = e.key.toLowerCase();
-    if(k===' ') keys.space = true;
+    if(k===' ') { keys.space = true; e.preventDefault(); }
     if(k==='shift') keys.shift = true;
     if(k==='e') keys.e = true;
+    if(k==='arrowup') { keys.arrowup = true; e.preventDefault(); }
+    if(k==='arrowdown') { keys.arrowdown = true; e.preventDefault(); }
+    if(k==='arrowleft') { keys.arrowleft = true; e.preventDefault(); }
+    if(k==='arrowright') { keys.arrowright = true; e.preventDefault(); }
     if(keys.hasOwnProperty(k)) keys[k] = true;
   });
   document.addEventListener('keyup', e => {
@@ -14,6 +18,10 @@ export function initInput() {
     if(k===' ') keys.space = false;
     if(k==='shift') keys.shift = false;
     if(k==='e') keys.e = false;
+    if(k==='arrowup') keys.arrowup = false;
+    if(k==='arrowdown') keys.arrowdown = false;
+    if(k==='arrowleft') keys.arrowleft = false;
+    if(k==='arrowright') keys.arrowright = false;
     if(keys.hasOwnProperty(k)) keys[k] = false;
   });
   document.addEventListener('mousemove', e => {
