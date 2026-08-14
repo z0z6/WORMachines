@@ -19,17 +19,12 @@ export function updateChunks(px, pz) {
     }
   }
 
-  // Unload distant
   for(const [key, obj] of activeChunks) {
     if(!needed.has(key)) {
       scene.remove(obj.terrain);
       scene.remove(obj.veg);
       obj.terrain.geometry.dispose();
-      // NIE wywołujemy material.dispose() — materiały są współdzielone
-      // między chunkami przez biomeMaterials i ich niszczenie powoduje
-      // czarne/rozjeżdżone tekstury na pozostałych chunkach.
-      // Tekstury są zarządzane przez Three.js i żyją tak długo,
-      // jak długo istnieje referencja w biomeMaterials.
+      // NIE niszczymy material.dispose() — materiały są współdzielone!
       obj.veg.traverse(c => {
         if(c.isInstancedMesh) { c.geometry.dispose(); c.material.dispose(); }
       });
@@ -37,7 +32,6 @@ export function updateChunks(px, pz) {
     }
   }
 
-  // Load new
   for(const key of needed) {
     if(activeChunks.has(key)) continue;
     const [cx, cz] = key.split(',').map(Number);
