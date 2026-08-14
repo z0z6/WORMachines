@@ -13,7 +13,7 @@ export function terrainHeight(x, z) {
   const cz = Math.floor(z / 32);
   const b = BIOMES[biomeAt(cx, cz)];
   let h = noise(x, z);
-  if(b.name === 'Żwirownia') h *= 0.3;
+  if(b.name === '\u017bwirownia') h *= 0.3;
   if(b.name === 'Las mieszany') h *= 1.4;
   return h * 2.5;
 }
@@ -21,30 +21,31 @@ export function terrainHeight(x, z) {
 export function createChunkMesh(cx, cz) {
   const biomeKey = biomeAt(cx, cz);
   const size = 32;
-  const seg = 64; // ZWIĘKSZONE z 24 → 64 (wymagane dla displacement)
+  // Wracamy do 24 segmentów — displacement jest wyłączony,
+  // więc nie potrzebujemy 64. Mniej wierzchołków = lepsza wydajność.
+  const seg = 24;
   const geo = new THREE.PlaneGeometry(size, size, seg, seg);
   geo.rotateX(-Math.PI/2);
 
   const pos = geo.attributes.position;
   const uvAttr = geo.attributes.uv;
-  const uvScale = 0.05; // 1 powtórzenie tekstury co ~20 jednostek świata
+
+  // Zmniejszony uvScale = tekstura powtarza się rzadziej,
+  // więc detale (kamienie, kępy trawy) wyglądają na WIĘKSZE w świecie gry.
+  // Dla zoptymalizowanych (mniejszych) tekstur to kluczowe.
+  const uvScale = 0.025;
 
   for(let i = 0; i < pos.count; i++) {
-    // Współrzędne świata (płaszczyzna XZ)
     const wx = pos.getX(i) + cx * size;
     const wz = pos.getZ(i) + cz * size;
-
-    // Duża, płynna wysokość terenu (szum)
     const y = terrainHeight(wx, wz);
     pos.setY(i, y);
-
-    // UV w przestrzeni świata — ciągłe między chunkami!
     uvAttr.setXY(i, wx * uvScale, wz * uvScale);
   }
 
   geo.computeVertexNormals();
 
-  // AO map w starszych wersjach Three.js wymaga uv2
+  // AO map wymaga uv2
   if (!geo.attributes.uv2) {
     geo.setAttribute('uv2', geo.attributes.uv.clone());
   }
