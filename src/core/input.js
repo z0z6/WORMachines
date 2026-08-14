@@ -28,9 +28,4 @@ export function initInput() {
     mouse.dx = e.movementX || 0;
     mouse.dy = e.movementY || 0;
   });
-  // Reset per frame
-  requestAnimationFrame(function track() {
-    mouse.dx = 0; mouse.dy = 0;
-    requestAnimationFrame(track);
-  });
 }
