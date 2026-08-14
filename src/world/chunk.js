@@ -4,7 +4,7 @@ import { createChunkMesh } from './terrain.js';
 import { generateVegetation } from './vegetation.js';
 
 const activeChunks = new Map();
-const CHUNK_DIST = 2; // load radius in chunks
+const CHUNK_DIST = 2;
 
 export function getChunkKey(cx, cz) { return `${cx},${cz}`; }
 
@@ -24,18 +24,14 @@ export function updateChunks(px, pz) {
     if(!needed.has(key)) {
       scene.remove(obj.terrain);
       scene.remove(obj.veg);
-
-      // Geometria terenu jest unikalna dla chunku — bezpiecznie ją zwolnić
       obj.terrain.geometry.dispose();
-      // NIE zwalniamy obj.terrain.material — to współdzielony obiekt z biomeMaterials,
-      // używany też przez inne, wciąż aktywne chunki tego samego biomu!
-
-      // veg is a group with instanced meshes
+      // NIE wywołujemy material.dispose() — materiały są współdzielone
+      // między chunkami przez biomeMaterials i ich niszczenie powoduje
+      // czarne/rozjeżdżone tekstury na pozostałych chunkach.
+      // Tekstury są zarządzane przez Three.js i żyją tak długo,
+      // jak długo istnieje referencja w biomeMaterials.
       obj.veg.traverse(c => {
-        if(c.isInstancedMesh) {
-          // grassGeo/bushGeo/mossGeo to współdzielone singletony (vegetation.js) — nie zwalniamy geometrii
-          c.material.dispose(); // materiał roślinności JEST unikalny na chunk — to bezpieczne
-        }
+        if(c.isInstancedMesh) { c.geometry.dispose(); c.material.dispose(); }
       });
       activeChunks.delete(key);
     }
