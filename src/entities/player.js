@@ -167,6 +167,7 @@ export function updatePlayer(dt, camera, slowMult = 1) {
   // Mouse look (camera orbit) — camYaw jest teraz JEDYNYM źródłem kierunku kamery
   camYaw -= mouse.dx * 0.002;
   camPitch = Math.max(0.1, Math.min(1.2, camPitch + mouse.dy*0.002));
+  mouse.dx = 0; mouse.dy = 0; // zużyte — zerujemy tu, żeby uniknąć wyścigu z osobną pętlą rAF
 
   // Kierunek liczony z camYaw, NIE z camera.getWorldDirection() —
   // odczytywanie kierunku z samej kamery tworzyło pętlę sprzężenia zwrotnego z kodem
