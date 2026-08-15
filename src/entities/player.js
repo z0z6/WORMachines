@@ -245,11 +245,11 @@ export function updatePlayer(dt, camera, slowMult = 1) {
     }
   });
 
-  // Camera follow — teraz oparta na camYaw (mysz), NIE na obrocie postaci
+  // Camera follow — oparta na camYaw I camPitch (mysz), NIE na obrocie postaci
   const dist = keys.shift ? 7 : 5.5;
-  const height = keys.shift ? 4 : 3;
-  const cx = p.x - Math.sin(camYaw)*dist;
-  const cz = p.z - Math.cos(camYaw)*dist;
-  camera.position.lerp(new THREE.Vector3(cx, p.y+height, cz), dt*4);
+  const cx = p.x - Math.sin(camYaw) * Math.cos(camPitch) * dist;
+  const cz = p.z - Math.cos(camYaw) * Math.cos(camPitch) * dist;
+  const cy = p.y + Math.sin(camPitch) * dist + 1.5;
+  camera.position.lerp(new THREE.Vector3(cx, cy, cz), dt*4);
   camera.lookAt(p.x, p.y+0.5, p.z);
 }
