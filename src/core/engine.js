@@ -32,6 +32,8 @@ export function initEngine() {
   sun.position.set(40, 60, 20);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048,2048);
+  sun.shadow.bias = -0.0008;    // usuwa "shadow acne" — poprzeckowane, warstwowe cienie na pofalowanym terenie
+  sun.shadow.normalBias = 0.04; // dodatkowe zabezpieczenie dla powierzchni z displacement mapą
   const d = 60;
   sun.shadow.camera.left = -d; sun.shadow.camera.right = d;
   sun.shadow.camera.top = d; sun.shadow.camera.bottom = -d;
