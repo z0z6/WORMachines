@@ -27,7 +27,11 @@ export function createChunkMesh(cx, cz) {
 
   const pos = geo.attributes.position;
   const uvAttr = geo.attributes.uv;
-  const uvScale = 0.025;
+
+  // ZWIĘKSZONY uvScale — tekstura jest teraz 4x większa w świecie,
+  // więc detale (kamienie, kępy trawy) są bardziej widoczne z daleka
+  // i nie zlewają się w jednolity szum przez mipmapping.
+  const uvScale = 0.1;
 
   for(let i = 0; i < pos.count; i++) {
     const wx = pos.getX(i) + cx * size;
@@ -47,10 +51,5 @@ export function createChunkMesh(cx, cz) {
   const mesh = new THREE.Mesh(geo, mat);
   mesh.receiveShadow = true;
   mesh.castShadow = true;
-
-  // DIAGNOSTYKA: dodajemy nazwę żeby łatwo znaleźć w konsoli
-  mesh.name = `chunk_${cx}_${cz}_${biomeKey}`;
-  console.log('[Terrain] Chunk created:', mesh.name, 'material.map:', mat.map ? 'loaded' : 'null');
-
   return mesh;
 }
