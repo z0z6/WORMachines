@@ -1,4 +1,4 @@
-export const keys = { w:false, a:false, z:false, d:false, s:false, space:false, shift:false, e:false, arrowup:false, arrowdown:false, arrowleft:false, arrowright:false };
+export const keys = { w:false, a:false, z:false, d:false, space:false, shift:false, e:false, arrowup:false, arrowdown:false, arrowleft:false, arrowright:false };
 export let mouse = { dx:0, dy:0 };
 
 export function initInput() {
@@ -27,5 +27,18 @@ export function initInput() {
   document.addEventListener('mousemove', e => {
     mouse.dx = e.movementX || 0;
     mouse.dy = e.movementY || 0;
+  });
+
+  // FIX: reset wszystkich klawiszy gdy okno traci focus
+  // (np. Alt+Tab, kliknięcie poza okno, przełączenie karty)
+  window.addEventListener('blur', () => {
+    for (const k in keys) keys[k] = false;
+    console.log('[Input] Window lost focus — all keys reset');
+  });
+
+  // Reset per frame
+  requestAnimationFrame(function track() {
+    mouse.dx = 0; mouse.dy = 0;
+    requestAnimationFrame(track);
   });
 }
